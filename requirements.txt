@@ -51,7 +51,6 @@ parso==0.7.0
 pickleshare==0.7.5
 prometheus-client==0.7.1
 prompt-toolkit==3.0.5
-PyAudio==0.2.11
 pycparser==2.20
 Pygments==2.6.1
 pylint==2.5.2
