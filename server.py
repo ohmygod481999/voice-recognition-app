@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import librosa
 import os
 import wave
+import google_regconition
 
 app = Flask(__name__)
 
@@ -19,11 +20,9 @@ def api():
     blob = request.files['file']
     # print(blob.read()) 
     blob.save('blob.wav')
-    y, sr = librosa.load('blob.wav')
-    return {
-        'y': y.tolist(),
-        'sr': sr
-    }
+    # y, sr = librosa.load('blob.wav')
+    text = google_regconition.recognizeAudio('blob.wav')
+    return text
 
 if __name__ == "__main__":
     app.debug = True

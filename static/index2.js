@@ -13,10 +13,16 @@ var gumStream; 						//stream from getUserMedia()
 var rec; 							//Recorder.js object
 var input; 							//MediaStreamAudioSourceNode we'll be recording
 
+stopBtn.classList.add('disabled')
+startBtn.classList.add('active')
+
 startBtn.addEventListener("click", startRecording)
 stopBtn.addEventListener("click", stopRecording)
 
 function startRecording() {
+    stopBtn.classList.replace("disabled", "active")
+    startBtn.classList.replace("active", "disabled")
+    statusElement.innerText = "Recording"
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: false
@@ -44,6 +50,9 @@ function startRecording() {
 
 
 function stopRecording() {
+    startBtn.classList.replace("disabled", "active")
+    stopBtn.classList.replace("active", "disabled")
+    statusElement.innerText = "Finished"
     console.log("stopButton clicked");
 
     //tell the recorder to stop the recording
@@ -70,9 +79,10 @@ function createDownloadLink(blob) {
     }).then(res => {
         res.json().then(data => {
             console.log(data)
-            // content.innerText = JSON.stringify(data)
+            content.innerText = "Từ của bạn: " + data.alternative[data.alternative.length - 1].transcript
 
         })
+            .catch(err => alert('Some thing happen, try again'))
         // console.log("Request complete! response:", res.body);
     });
 }
