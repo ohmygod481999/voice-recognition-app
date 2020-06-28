@@ -24,6 +24,7 @@ def hello_world():
     return render_template('index2.html')
 
 @app.route('/api/check-attendance', methods = ['POST'])
+@cross_origin()
 def api():
     try:
         blob = request.files['file']
@@ -56,6 +57,7 @@ def api():
 
 
 @app.route('/api/get-classes', methods = ['GET'])
+@cross_origin()
 def gClasses():
     conn = openConnection()
     classes = getClasses(conn)
@@ -63,6 +65,7 @@ def gClasses():
     return jsonify(classes)
 
 @app.route('/api/get-students', methods = ['GET'])
+@cross_origin()
 def gStudents():
     classId = request.args['classId']
     conn = openConnection()
@@ -71,6 +74,7 @@ def gStudents():
     return jsonify(students)
 
 @app.route('/api/get-class-transaction', methods = ['GET'])
+@cross_origin()
 def gClassTrans():
     classId = request.args['classId']
     conn = openConnection()
@@ -79,6 +83,7 @@ def gClassTrans():
     return jsonify(transaction)
 
 @app.route('/api/add-class-transaction', methods = ['POST'])
+@cross_origin()
 def aClassTrans():
     req = request.get_json()
     conn = openConnection()
