@@ -3,7 +3,7 @@ import librosa
 import os
 import wave
 import test
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from random import seed
 from random import random
 from db.database import *
@@ -12,6 +12,7 @@ app = Flask(__name__)
 seed(1)
 
 cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 nchannels = 2
 sampwidth = 2
