@@ -19,7 +19,7 @@ app.config["CLIENT_CSV"] = "csv_file"
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 @app.route('/api/check-attendance', methods = ['POST'])
 @cross_origin()
