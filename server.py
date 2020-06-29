@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import librosa
 import os
 import wave
@@ -7,27 +7,27 @@ from flask_cors import CORS, cross_origin
 from random import seed
 from random import random
 from db.database import *
+from export_excel import *
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/')
 seed(1)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-nchannels = 2
-sampwidth = 2
-framerate = 27000
-nframes = 2
+app.config["CLIENT_CSV"] = "csv_file"
 
 @app.route('/')
-def hello_world():
-    return render_template('index2.html')
+def index():
+    return app.send_static_file('index.html')
 
 @app.route('/api/check-attendance', methods = ['POST'])
 @cross_origin()
 def api():
     try:
         blob = request.files['file']
+        noiseBlob = request.files['noise']
+
         name = request.form['name']
         name_map = {
             "Nguyễn Nhật Minh": "nhat_minh",
@@ -36,10 +36,9 @@ def api():
             "Nguyễn Duy Chương": "duy_chuong",
             "Lê Văn Lợi": "le_loi",
             "Đinh Khánh Linh": "khanh_linh"
-        }
-        # data = blob.read()
-        # print(data) 
+        } 
         blob.save('blob.wav')
+        noiseBlob.save('noise_blob.wav')
         best_score = test.best_score("blob.wav")
         print(best_score)
         if (name_map[name] == best_score[0]):
@@ -91,6 +90,36 @@ def aClassTrans():
     if result:
         return "success"
     return "fail"
+
+
+@app.route("/attendant-csv/<id>")
+def get_file(id):
+    """Download a file."""
+    # req = request.get_json()
+    conn = openConnection()
+    transaction = getTransaction(conn, id)
+    date = transaction[1]
+    classId = transaction[2] 
+    detail_json = transaction[3]
+    detail = json.loads(detail_json)
+    print(detail)
+    print(type(detail))
+    ids = []
+    names = []
+    attendances = []
+    for student in detail:
+        ids.append(student['id'])
+        names.append(student['name'])
+        attendances.append(student['attendant'])
+    exportData = {
+        'MSSV': ids,
+        'Họ và Tên': names,
+        'Có mặt': attendances
+    }
+    filename = "attendant-" + classId + "-" + date + ".csv"
+    saveFileCsv(filename, exportData, ['MSSV', 'Họ và Tên', 'Có mặt'])
+    return send_from_directory(app.config["CLIENT_CSV"], filename, as_attachment=True)
+
 
 if __name__ == "__main__":
     app.debug = True

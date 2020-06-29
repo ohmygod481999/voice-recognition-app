@@ -26,6 +26,13 @@ def getClassTransaction(conn, classId):
     rows = cur.fetchall()
     conn.close()
     return rows
+
+def getTransaction(conn, id):
+    cur = conn.cursor()
+    cur.execute(f"select * from class_transaction where id='{id}'")
+    rows = cur.fetchall()
+    conn.close()
+    return rows[0]
     
 def addClassTransaction(conn, classId, detail, date):
     # try:
