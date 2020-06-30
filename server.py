@@ -19,40 +19,40 @@ app.config["CLIENT_CSV"] = "csv_file"
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('test.html')
 
 @app.route('/api/check-attendance', methods = ['POST'])
 @cross_origin()
 def api():
-    try:
-        blob = request.files['file']
-        noiseBlob = request.files['noise']
+    # try:
+    blob = request.files['file']
+    noiseBlob = request.files['noise']
 
-        name = request.form['name']
-        name_map = {
-            "Nguyễn Nhật Minh": "nhat_minh",
-            "Vương Bảo Long": "bao_long",
-            "Nguyễn Huy Linh": "huy_linh",
-            "Nguyễn Duy Chương": "duy_chuong",
-            "Lê Văn Lợi": "le_loi",
-            "Đinh Khánh Linh": "khanh_linh"
-        } 
-        blob.save('blob.wav')
-        noiseBlob.save('noise_blob.wav')
-        best_score = test.best_score("blob.wav")
-        print(best_score)
-        if (name_map[name] == best_score[0]):
-            return {
-                'status': "success",
-            }
-        else:
-            return {
-                'status': "fail",
-            }
-    except Exception:
+    name = request.form['name']
+    name_map = {
+        "Nguyễn Nhật Minh": "nhat_minh",
+        "Vương Bảo Long": "bao_long",
+        "Nguyễn Huy Linh": "huy_linh",
+        "Nguyễn Duy Chương": "duy_chuong",
+        "Lê Văn Lợi": "le_loi",
+        "Đinh Khánh Linh": "khanh_linh"
+    } 
+    blob.save('blob.wav')
+    noiseBlob.save('noise_blob.wav')
+    best_score = test.best_score("blob.wav","noise_blob.wav")
+    print(best_score)
+    if (name_map[name] == best_score[0]):
         return {
-                'status': "fail",
+            'status': "success",
         }
+    else:
+        return {
+            'status': "fail",
+        }
+    # except Exception:
+    #     return {
+    #             'status': "fail",
+    #     }
 
 
 @app.route('/api/get-classes', methods = ['GET'])
