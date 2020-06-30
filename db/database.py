@@ -51,3 +51,19 @@ def getClasses(conn):
     conn.close()
     return rows
 
+def getUsers(conn):
+    cur = conn.cursor()
+    cur.execute("select * from users")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def register(conn, uname, password):
+    try:
+        cur = conn.cursor()
+        cur.execute(f"INSERT INTO users (username, password) VALUES('{uname}','{password}');")
+        conn.commit()
+        conn.close()
+        return True
+    except Exception:
+        return False

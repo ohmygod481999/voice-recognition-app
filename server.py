@@ -91,6 +91,40 @@ def aClassTrans():
         return "success"
     return "fail"
 
+@app.route('/api/login', methods = ['POST'])
+@cross_origin()
+def loginRoute():
+    req = request.get_json()
+    conn = openConnection()
+    password = req['password']
+    uname = req['uname']
+    users = getUsers(conn)
+    for user in users:
+        if (user[0] == uname):
+            if user[1] == password:
+                return "success"
+    return "Tên đăng nhập hoặc mật khẩu không đúng"
+    # if result:
+    #     return "success"
+    # return "fail"
+
+@app.route('/api/register', methods = ['POST'])
+@cross_origin()
+def registerRoute():
+    # try:
+    req = request.get_json()
+    conn = openConnection()
+    password = req['password']
+    uname = req['uname']
+    if (register(conn, uname, password)):
+        return "success"
+    return "Tên đăng nhập đã tồn tại"
+    # except Exception:
+    #     return "fail"
+    # if result:
+    #     return "success"
+    # return "fail"
+
 
 @app.route("/attendant-csv/<id>")
 def get_file(id):
