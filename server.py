@@ -9,7 +9,7 @@ from random import random
 from db.database import *
 from export_excel import *
 
-app = Flask(__name__, static_folder='static', static_url_path='/')
+app = Flask(__name__, static_folder='static', static_url_path='/', template_folder='templates')
 seed(1)
 
 cors = CORS(app)
@@ -19,7 +19,7 @@ app.config["CLIENT_CSV"] = "csv_file"
 
 @app.route('/')
 def index():
-    return render_template('test.html')
+    return render_template('index.html')
 
 @app.route('/api/check-attendance', methods = ['POST'])
 @cross_origin()
