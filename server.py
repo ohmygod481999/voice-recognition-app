@@ -9,7 +9,7 @@ from random import random
 from db.database import *
 from export_excel import *
 
-app = Flask(__name__, static_folder='static', static_url_path='/', template_folder='templates')
+app = Flask(__name__, static_folder='static', static_url_path='', template_folder='templates')
 seed(1)
 
 cors = CORS(app)
@@ -156,5 +156,5 @@ def get_file(id):
 
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     app.run()
